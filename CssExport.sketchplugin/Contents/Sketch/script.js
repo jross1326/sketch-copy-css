@@ -1,14 +1,3 @@
-function RoundCorrect(num, precision = 2) {
-	// half epsilon to correct edge cases.
-	var c = 0.5 * Number.EPSILON * num;
-	//	var p = Math.pow(10, precision); //slow
-	var p = 1; while (precision--> 0) p *= 10;
-	if (num < 0)
-		p *= -1;
-	return Math.round((num + c) * p) / p;
-}
-
-
 var onRun = function (context) {
 	var layer = context.selection[0];
 	var css = layer.CSSAttributes();
@@ -30,7 +19,7 @@ var onRun = function (context) {
 		obj[key] = value;
 	}
 	if(obj['line-height'] && baseFontSite) {
-							num = obj['line-height'].replace("px", "") / baseFontSite;
+		num = obj['line-height'].replace("px", "") / baseFontSite;
 		num = parseFloat(num.toFixed(4));
 		obj['line-height'] = num + 'rem; //'+obj['line-height'];
 	}
@@ -43,7 +32,7 @@ var onRun = function (context) {
 
 	if(obj['letter-spacing'] && baseFontSite) {
 		num = obj['letter-spacing'].replace("px", "") / baseFontSite;
-		num = parseFloat(num.toFixed(10));
+		num = parseFloat(num.toFixed(4));
 		obj['letter-spacing'] =  num + 'rem; //'+obj['letter-spacing'];
 	}
 	string = '';
