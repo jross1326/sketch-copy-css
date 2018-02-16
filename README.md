@@ -1,6 +1,6 @@
 # Sketch plugin to copy css attributes.
 
-Copy css - same as the default css copy but will convert line-height to unitless value.
+Copy css - same as the default css copy but will convert line-height, font-size and letter-spacing to rem values.
 
 ## Install
 
