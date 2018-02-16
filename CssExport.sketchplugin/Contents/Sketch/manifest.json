@@ -9,15 +9,13 @@
   "bundleVersion": 1,
   "commands": [
     {
+      "name": "Set base font-size",
+      "script": "font-size.js"
+    },
+    {
       "name": "Copy CSS Attributes",
-      "identifier": "set",
       "shortcut": "cmd+shift+c",
       "script": "script.js"
     }
-  ],
-  "menu": {
-    "items": [
-      "set"
-    ]
-  }
+  ]
 }
