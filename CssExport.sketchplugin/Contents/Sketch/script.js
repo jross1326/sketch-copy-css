@@ -83,4 +83,5 @@ var onRun = function (context) {
 	this.pasteBoard = NSPasteboard.generalPasteboard();
 	this.pasteBoard.declareTypes_owner( [ NSPasteboardTypeString ], null );
 	this.pasteBoard.setString_forType( string, NSPasteboardTypeString );
+	context.document.showMessage("Copied CSS Attributes");
 }
