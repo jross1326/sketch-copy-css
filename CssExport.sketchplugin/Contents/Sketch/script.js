@@ -9,10 +9,8 @@ var onRun = function (context) {
 		obj[key] = value;
 	}
 	if(obj['font-size'] && obj['line-height']) {
-		obj['line-height'] = parseInt(obj['line-height'], 10) / parseInt(obj['font-size'], 10);
+		obj['line-height'] = (parseInt(obj['line-height'], 10) / parseInt(obj['font-size'], 10)) + '; //'+obj['line-height'];
 	}
-	log(obj);
-
 	string = '';
 	for (var key in obj){
 		string += key+':'+obj[key]+";\n";
@@ -22,5 +20,3 @@ var onRun = function (context) {
 	this.pasteBoard.declareTypes_owner( [ NSPasteboardTypeString ], null );
 	this.pasteBoard.setString_forType( string, NSPasteboardTypeString );
 }
-
-
