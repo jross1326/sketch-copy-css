@@ -12,11 +12,11 @@ var onRun = function (context) {
 		var baseFontSite = context.document.askForUserInput_initialValue("Base Font Size?", 20);
 		command.setValue_forKey_onLayer_forPluginIdentifier(baseFontSite, 'base-font-size', docData, 'css-export');
 	}
-
+	
 	for(var j = 1 ; j < css.length ; ++j){
-		newString = css[j].split(" ");
-		var key = newString[0].replace(':', '').replace('"', '');
-		var value = newString[1].replace(';', '').replace('"', '');
+		newString = css[j].split(": ");
+		var key = newString[0].replace(':', '');
+		var value = newString[1].replace(';', '');
 		obj[key] = value;
 	}
 	if(obj['line-height'] && baseFontSite) {
@@ -57,15 +57,29 @@ var onRun = function (context) {
 	string = '';
 	for (var key in obj){
 		if(key == "font-family" && fontFamilyScss && fontFamilyScss != 0  && fontFamilyScss != 'false') {
-			string += key+':'+fontFamilyScss+";\n";
+			value = fontFamilyScss;
 		}else{
-			string += key+':'+obj[key]+";\n";
+			value = obj[key];
 		}
+
+		var found = value.match(/(#([0-9a-f]{3}){1,2}|(rgba|hsla)\(\d{1,3}%?(,\s?\d{1,3}%?){2},\s?(1|0|0?\.\d+)\)|(rgb|hsl)\(\d{1,3}%?(,\s?\d{1,3}%?){2}\))/i);
+		
+		if(found) {
+			found = found[0];
+			var color = command.valueForKey_onLayer_forPluginIdentifier(encodeURIComponent(found)+'-color', docData, 'css-export');
+			if(!color || forceOverrides == true) {
+				var color = context.document.askForUserInput_initialValue("Sass variable for "+found, found);
+				command.setValue_forKey_onLayer_forPluginIdentifier(color, encodeURIComponent(found)+'-color', docData, 'css-export');
+			}
+			value = value.replace(found, color) + '; //' + found;
+		}
+
+		string += key+':'+value+";\n";
 		if(key == "font-family" && fontWeight && fontWeight != 0  && fontWeight != 'false') {
 			string += 'font-weight:'+fontWeight+";\n";
 		}
 	}
-
+	log(string);
 	this.pasteBoard = NSPasteboard.generalPasteboard();
 	this.pasteBoard.declareTypes_owner( [ NSPasteboardTypeString ], null );
 	this.pasteBoard.setString_forType( string, NSPasteboardTypeString );
