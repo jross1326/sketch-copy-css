@@ -2,10 +2,10 @@
   "name": "Copy CSS",
   "description": "",
   "author": "Joseph Ross",
-  "homepage": "",
-  "version": 2.0,
+  "homepage": "https://github.com/jross1326/sketch-copy-css",
+  "version": 1.0,
   "identifier": "css.export",
-  "compatibleVersion": 3.9,
+  "compatibleVersion": 48.2,
   "bundleVersion": 1,
   "commands": [
     {
