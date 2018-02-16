@@ -16,6 +16,10 @@
       "name": "Copy CSS Attributes",
       "shortcut": "cmd+shift+c",
       "script": "script.js"
-    }
+    },
+    {
+      "name": "Force Setting Overrides",
+      "script": "force-overrides.js"
+    },
   ]
 }

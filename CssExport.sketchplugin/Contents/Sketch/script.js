@@ -6,6 +6,7 @@ var onRun = function (context) {
 	var docData = context.document.documentData();
 	var command = context.command;
 	var baseFontSite = command.valueForKey_onLayer_forPluginIdentifier('base-font-size', docData, 'css-export');
+	var forceOverrides = command.valueForKey_onLayer_forPluginIdentifier('force-overrides', docData, 'css-export');
 
 	if(!baseFontSite || baseFontSite == 0) {
 		var baseFontSite = context.document.askForUserInput_initialValue("Base Font Size?", 20);
@@ -20,26 +21,51 @@ var onRun = function (context) {
 	}
 	if(obj['line-height'] && baseFontSite) {
 		num = obj['line-height'].replace("px", "") / baseFontSite;
-		num = parseFloat(num.toFixed(4));
+		num = parseFloat(num.toFixed(6));
 		obj['line-height'] = num + 'rem; //'+obj['line-height'];
 	}
 
 	if(obj['font-size'] && baseFontSite) {
 		num = obj['font-size'].replace("px", "") / baseFontSite;
-		num = parseFloat(num.toFixed(4));
+		num = parseFloat(num.toFixed(6));
 		obj['font-size'] =  num + 'rem; //'+obj['font-size'];
 	}
 
 	if(obj['letter-spacing'] && baseFontSite) {
 		num = obj['letter-spacing'].replace("px", "") / baseFontSite;
-		num = parseFloat(num.toFixed(4));
+		num = parseFloat(num.toFixed(6));
 		obj['letter-spacing'] =  num + 'rem; //'+obj['letter-spacing'];
 	}
+
+	fontWeight = false;
+	fontFamilyScss = false;
+	if(obj['font-family']) {
+		var fontWeight = command.valueForKey_onLayer_forPluginIdentifier(obj['font-family']+'-weight', docData, 'css-export');
+		if(!fontWeight || forceOverrides == true) {
+			var fontWeight = context.document.askForUserInput_initialValue("What is the font weight for "+obj['font-family'], 500);
+			command.setValue_forKey_onLayer_forPluginIdentifier(fontWeight, obj['font-family']+'-weight', docData, 'css-export');
+		}
+
+		var fontFamilyScss = command.valueForKey_onLayer_forPluginIdentifier(obj['font-family']+'-family', docData, 'css-export');
+		if(!fontFamilyScss || forceOverrides == true) {
+			famDefault = '$'+ obj['font-family'].replace('-', '');
+			var fontFamilyScss = context.document.askForUserInput_initialValue("Sass variable for font family "+obj['font-family'], famDefault);
+			command.setValue_forKey_onLayer_forPluginIdentifier(fontFamilyScss, obj['font-family']+'-family', docData, 'css-export');
+		}
+	}
+
 	string = '';
 	for (var key in obj){
-		string += key+':'+obj[key]+";\n";
-
+		if(key == "font-family" && fontFamilyScss && fontFamilyScss != 0  && fontFamilyScss != 'false') {
+			string += key+':'+fontFamilyScss+";\n";
+		}else{
+			string += key+':'+obj[key]+";\n";
+		}
+		if(key == "font-family" && fontWeight && fontWeight != 0  && fontWeight != 'false') {
+			string += 'font-weight:'+fontWeight+";\n";
+		}
 	}
+
 	this.pasteBoard = NSPasteboard.generalPasteboard();
 	this.pasteBoard.declareTypes_owner( [ NSPasteboardTypeString ], null );
 	this.pasteBoard.setString_forType( string, NSPasteboardTypeString );
