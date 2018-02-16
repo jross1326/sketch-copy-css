@@ -20,6 +20,6 @@
     {
       "name": "Force Setting Overrides",
       "script": "force-overrides.js"
-    },
+    }
   ]
 }
